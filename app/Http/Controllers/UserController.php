@@ -51,7 +51,9 @@ class UserController extends Controller
         if (isset($data['password'])) {
             $data['password'] = Hash::make($data['password']);
         }
-        $user = User::create($data);
+        $user = User::find($id);
+        $user->fill($data);
+        $user->save();
         return $user;
     }
 }

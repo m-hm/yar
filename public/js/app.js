@@ -2015,38 +2015,115 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["userRoute"],
+  props: ["userRoute", "userId"],
   data: function data() {
     return {
       form: {
         roles: []
-      }
+      },
+      hasError: false,
+      errors: {}
     };
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+      var id, form;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              id = _this.userId | 0;
+
+              if (!(id < 1)) {
+                _context.next = 3;
+                break;
+              }
+
+              return _context.abrupt("return");
+
+            case 3:
+              _context.next = 5;
+              return axios.get("".concat(_this.userRoute, "/").concat(id));
+
+            case 5:
+              form = _context.sent;
+              _this.form = form.data;
+              console.info(_this.form);
+
+            case 8:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee);
+    }))();
   },
   methods: {
     onSubmit: function onSubmit() {
-      var _this = this;
+      var _this2 = this;
 
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
-        var result;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+        var id, result, _result;
+
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
           while (1) {
-            switch (_context.prev = _context.next) {
+            switch (_context2.prev = _context2.next) {
               case 0:
-                _context.next = 2;
-                return axios.post(_this.userRoute, _this.form);
+                _this2.hasError = false;
+                id = _this2.userId | 0;
+                _context2.prev = 2;
 
-              case 2:
-                result = _context.sent;
+                if (!(id > 0)) {
+                  _context2.next = 10;
+                  break;
+                }
+
+                _context2.next = 6;
+                return axios.put("".concat(_this2.userRoute, "/").concat(id), _this2.form);
+
+              case 6:
+                result = _context2.sent;
                 console.log(result);
+                _context2.next = 14;
+                break;
 
-              case 4:
+              case 10:
+                _context2.next = 12;
+                return axios.post(_this2.userRoute, _this2.form);
+
+              case 12:
+                _result = _context2.sent;
+                console.log(_result);
+
+              case 14:
+                _context2.next = 20;
+                break;
+
+              case 16:
+                _context2.prev = 16;
+                _context2.t0 = _context2["catch"](2);
+                _this2.errors = _context2.t0.response.data;
+                _this2.hasError = true;
+
+              case 20:
               case "end":
-                return _context.stop();
+                return _context2.stop();
             }
           }
-        }, _callee);
+        }, _callee2, null, [[2, 16]]);
       }))();
     }
   }
@@ -38338,6 +38415,27 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "container" }, [
+    _vm.hasError
+      ? _c(
+          "div",
+          { staticClass: "alert alert-danger", attrs: { role: "alert" } },
+          [
+            _c("p", [_vm._v(_vm._s(_vm.errors.message))]),
+            _vm._v(" "),
+            _c(
+              "ul",
+              _vm._l(_vm.errors.errors, function(v, k) {
+                return _c("li", { key: k }, [
+                  _c("b", [_vm._v(_vm._s(k))]),
+                  _vm._v("\n        : " + _vm._s(v[0]) + "\n      ")
+                ])
+              }),
+              0
+            )
+          ]
+        )
+      : _vm._e(),
+    _vm._v(" "),
     _c("form", [
       _c("div", { staticClass: "form-row" }, [
         _c("div", { staticClass: "col form-group" }, [

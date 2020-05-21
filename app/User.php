@@ -36,4 +36,10 @@ class User extends Authenticatable
     protected $casts = [
         'roles' => 'array',
     ];
+
+
+    public function getFullNameAttribute()
+    {
+        return "{$this->first_name} {$this->last_name}";
+    }
 }

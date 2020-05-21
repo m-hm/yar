@@ -1,5 +1,15 @@
 <template>
   <div class="container">
+    <div v-if="hasError" class="alert alert-danger" role="alert">
+      <p>{{ errors.message }}</p>
+      <ul>
+        <li v-for="(v, k) in errors.errors" :key="k">
+          <b>{{ k }}</b>
+          : {{ v[0] }}
+        </li>
+      </ul>
+    </div>
+
     <form>
       <div class="form-row">
         <div class="col form-group">
@@ -90,19 +100,36 @@ export default {
   props: ["userRoute", "userId"],
   data() {
     return {
-      form: { roles: [] }
+      form: { roles: [] },
+      hasError: false,
+      errors: {}
     };
   },
-  mounted() {
-    this.userId |= 0;
-    if (this.userId < 1) return;
+  async mounted() {
+    let id = this.userId | 0;
+    if (id < 1) return;
 
-    this.form = await axios.get(`${this.userRoute}/${this.userId}`);
+    let form = await axios.get(`${this.userRoute}/${id}`);
+    this.form = form.data;
+    console.info(this.form);
   },
   methods: {
     async onSubmit() {
-      let result = await axios.post(this.userRoute, this.form);
-      console.log(result);
+      this.hasError = false;
+      let id = this.userId | 0;
+
+      try {
+        if (id > 0) {
+          let result = await axios.put(`${this.userRoute}/${id}`, this.form);
+          console.log(result);
+        } else {
+          let result = await axios.post(this.userRoute, this.form);
+          console.log(result);
+        }
+      } catch (e) {
+        this.errors = e.response.data;
+        this.hasError = true;
+      }
     }
   }
 };
